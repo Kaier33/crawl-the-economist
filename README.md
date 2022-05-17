@@ -26,7 +26,7 @@ RECEIVER="接收人的邮箱"
 `docker pull kaier33/craw-the-economist-ebooks:v1.01`
 
 3. 启动  
-`docker run -d -v $PWD/.env:/crawl-the-economist/.env kaier33/craw-the-economist-ebooks:v1.01`
+`docker run -d --restart=always -v $PWD/.env:/crawl-the-economist/.env kaier33/craw-the-economist-ebooks:v1.01`
 
 ## todo:
 1. 任务时间自定
