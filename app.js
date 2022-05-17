@@ -10,11 +10,14 @@ const ping = require("ping");
 if (!CONFIG.SMTP_CODE || !CONFIG.SENDER || !CONFIG.RECEIVER) {
   throw Error('.env文件内容没有填写完整!')
 }
+if (!(CONFIG.SENDER.includes('@qq.com') || CONFIG.SENDER.includes('@163.com'))) {
+  throw Error('发件人仅支持 QQ邮箱 和 网易邮箱')
+}
 
 function sendMail(fileName) {
   return new Promise((resolve, reject) => {
     const transporter = nodemailer.createTransport({
-      service: 'QQ',
+      host: CONFIG.SENDER.includes('@qq.com') ? 'smtp.qq.com' : 'smtp.163.com',
       port: 587,
       secure: false,
       auth: {
