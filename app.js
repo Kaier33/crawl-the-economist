@@ -5,6 +5,7 @@ const path = require("path");
 const got = require('got');
 const nodemailer = require("nodemailer");
 const schedule = require('node-schedule');
+const ping = require("ping");
 
 if (!CONFIG.SMTP_CODE || !CONFIG.SENDER || !CONFIG.RECEIVER) {
   throw Error('.env文件内容没有填写完整!')
@@ -60,12 +61,37 @@ function getFileByUrl(url, fileName) {
   })
 }
 
+async function findOptimalHost() {
+  return new Promise(async (resovle) => {
+    try {
+      const hosts = ['github.com', 'hub.xn--gzu630h.xn--kpry57d', 'kgithub.com']
+      const optimalList = []
+      for(let host of hosts){
+        let res = await ping.promise.probe(host);
+        if (res.alive) {
+          optimalList.push({host: host, time: res.time})
+        }
+      }
+      optimalList.sort((a ,b) => {
+        if (a.time < b.time) return -1
+        if (a.time > b.time) return 1
+        return 0
+      })
+      resovle(optimalList[0]['host'])
+    } catch (error) {
+      resovle('github.com')
+    }
+  })
+}
+
 async function crawling() {
   try {
+    let host = 'github.com'
+    host = await findOptimalHost();
     console.log("------------crawling------------");
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
-    await page.goto(CONFIG.CRAWLING_URL);
+    await page.goto(`https://${host}${CONFIG.REPOSITORY}`);
     await page.waitForSelector('.Details-content--hidden-not-important.js-navigation-container.js-active-navigation-container');
     const lastDate =  await page.evaluate(async() => {
       const listSelector = '.Box-row.position-relative.js-navigation-item';

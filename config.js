@@ -9,8 +9,7 @@ dotenv.config({path: `${pathsDotenv}.mine`})
 dotenv.config({path: `${pathsDotenv}`});
 
 module.exports = {
-  ORIGINAL_URL: process.env.ORIGINAL_URL,    // 源站. 由于不可描述的原因, 正常访问很慢.
-  CRAWLING_URL: process.env.CRAWLING_URL,    // 镜像站. 墙内加速访问
+  REPOSITORY: process.env.REPOSITORY,        // 仓库地址不包括host
   SMTP_CODE: process.env.SMTP_CODE,          // 记得去邮箱中开启, 和获取SMTP码
   SENDER: process.env.SENDER,                // 邮件发送者
   RECEIVER: process.env.RECEIVER,            // 邮件接受者
