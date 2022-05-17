@@ -105,16 +105,25 @@ async function crawling() {
       let fmt_date = lastDate.replace(/te_/ig, '').replace(/\./ig, '/')
       const allWeekSeconds = 60 * 60 * 24 * 7 * 1000;
       if (new Date().getTime() - new Date(fmt_date).getTime() <= allWeekSeconds) {
+        const fileType = CONFIG.FILETYPE.toLocaleLowerCase();
         const link = await page.$(`a[title='${lastDate}']`);
         await link.click();
         await page.waitForTimeout(2000);
         const page2 = (await browser.pages())[1];
-        const page2_data = await page2.evaluate(async() => {
+        const page2_data = await page2.evaluate(async({fileType}) => {
+          let fileName = ''
+          const domList = document.querySelectorAll('.position-relative.js-navigation-item');
+          for (let i = 0; i < domList.length; i++) {
+            if (domList[i]['children'][1].firstElementChild.firstElementChild.title.includes(fileType)) {
+              fileName = domList[i]['children'][1].firstElementChild.firstElementChild.title
+              break
+            }
+          }
           return {
-            fileName: document.querySelectorAll('.position-relative.js-navigation-item')[2].children[1].firstElementChild.firstElementChild.title,
+            fileName,
             url: location.href
           }
-        })
+        }, {fileType})
         console.log('page2_data::', page2_data);
         const downloadUrl = page2_data.url.replace('/tree/', '/raw/') + `/${page2_data.fileName}`;
         console.log('download start', downloadUrl)
