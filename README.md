@@ -7,6 +7,27 @@
 3. 每周一早上9点开始爬虫任务. 默认爬取的是`.mobi`, 可在`.env`自行更改`FILETYPE` 为 `pdf | epub | mobi `
 
 
+### Docker
+
+1. 创建`.env`文件, 并按实际情况填入以下内容
+
+```
+FILETYPE="mobi"
+REPOSITORY="/hehonghui/the-economist-ebooks/tree/master/01_economist"
+EMAIL_SUBJECT="The Economist"
+EMAIL_CONTENT="The Economist mobi file"
+
+SMTP_CODE="这里填你的SMTP_CODE"
+SENDER="发件人邮箱 (请填写 QQ邮箱 或者 163邮箱)"
+RECEIVER="接收人的邮箱"
+```  
+
+2. 拉取镜像  
+`docker pull kaier33/craw-the-economist-ebooks:v1.01`
+
+3. 启动
+`docker run -d -v $PWD/.env:/crawl-the-economist/.env kaier33/craw-the-economist-ebooks:v1.01`
+
 ## todo:
 1. 任务时间自定
 2. pm2
