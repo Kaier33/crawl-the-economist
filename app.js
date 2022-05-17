@@ -14,6 +14,30 @@ if (!(CONFIG.SENDER.includes('@qq.com') || CONFIG.SENDER.includes('@163.com'))) 
   throw Error('发件人仅支持 QQ邮箱 和 网易邮箱')
 }
 
+function isExist(path) {
+  let exist = false
+  try {
+    fs.accessSync(path, fs.constants.F_OK)
+    exist = true
+  } catch (err) {
+    exist = false
+  }
+  return exist
+}
+
+function emptyDir(path) {
+  const files = fs.readdirSync(path);
+  files.forEach(file => {
+    const filePath = `${path}/${file}`;
+    const stats = fs.statSync(filePath);
+    if (stats.isDirectory()) {
+      emptyDir(filePath)
+    } else {
+      fs.unlinkSync(filePath)
+    }
+  })
+}
+
 function sendMail(fileName) {
   return new Promise((resolve, reject) => {
     const transporter = nodemailer.createTransport({
@@ -46,11 +70,12 @@ function sendMail(fileName) {
 function getFileByUrl(url, fileName) {
   return new Promise((resolve, reject) => {
     try {
-      fs.access(path.join(__dirname, `./download/${fileName}`), fs.constants.F_OK, (none) => {
-        if (!none) {
-          fs.unlinkSync(path.join(__dirname, `./download/${fileName}`))
-        }
-      })
+      const dirExist = isExist(path.join(__dirname, './download'))
+      if (dirExist) {
+        emptyDir(path.join(__dirname, './download'))
+      } else {
+        fs.mkdirSync(path.join(__dirname, './download'))
+      }
       got.stream(url)
         .pipe(fs.createWriteStream(path.join(__dirname, `./download/${fileName}`)))
         .on('close', function(err) {
@@ -130,6 +155,8 @@ async function crawling() {
         await getFileByUrl(downloadUrl, page2_data.fileName);
         await page.waitForTimeout(2000);
         await sendMail(page2_data.fileName);
+        await page.waitForTimeout(2000);
+        emptyDir(path.join(__dirname, './download'));
       }
     }
     await page.close();
