@@ -25,7 +25,7 @@ RECEIVER="接收人的邮箱"
 2. 拉取镜像  
 `docker pull kaier33/craw-the-economist-ebooks:v1.01`
 
-3. 启动
+3. 启动  
 `docker run -d -v $PWD/.env:/crawl-the-economist/.env kaier33/craw-the-economist-ebooks:v1.01`
 
 ## todo:
