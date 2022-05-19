@@ -4,7 +4,7 @@ WORKDIR /crawl-the-economist
 
 COPY package*.json /crawl-the-economist
 
-RUN npm install --registry=https://registry.npm.taobao.org
+RUN npm install --registry=https://registry.npmmirror.com
 
 COPY . /crawl-the-economist
 
