@@ -26,4 +26,4 @@ RECEIVER="接收人的邮箱"
 `docker pull kaier33/craw-the-economist-ebooks:v1.02`
 
 3. 启动  
-`docker run -d --restart=always -v $PWD/.env:/crawl-the-economist/.env kaier33/craw-the-economist-ebooks:v1.02`
+`docker run -d --restart=always -e TZ=Asia/Shanghai -v $PWD/.env:/crawl-the-economist/.env kaier33/craw-the-economist-ebooks:v1.02`
