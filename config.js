@@ -15,5 +15,6 @@ module.exports = {
   SENDER: process.env.SENDER,                // 邮件发送者
   RECEIVER: process.env.RECEIVER,            // 邮件接受者
   EMAIL_SUBJECT: process.env.EMAIL_SUBJECT,  // 邮件标题
-  EMAIL_CONTENT: process.env.EMAIL_CONTENT   // 邮件文本内容
+  EMAIL_CONTENT: process.env.EMAIL_CONTENT,   // 邮件文本内容
+  SCHEDULE: process.env.SCHEDULE,             // 每周定时任务执行时间 {hour: 9, minute: 0, dayOfWeek: 1}
 }

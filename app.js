@@ -165,6 +165,14 @@ async function crawling() {
   }
 }
 
-schedule.scheduleJob({hour: 9, minute: 0, dayOfWeek: 1}, function() {
+let env_schedule = null;
+try {
+  env_schedule = JSON.parse(CONFIG.SCHEDULE);
+} catch (error) {
+  console.log('env SCHEDULE 配置出错:', error)
+  env_schedule = {hour: 8, minute: 0, dayOfWeek: 6}
+}
+
+schedule.scheduleJob(env_schedule, function() {
   crawling();
 })

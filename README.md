@@ -4,7 +4,7 @@
   1.1. `SENDER`发件人目前仅支持 `QQ邮箱` 和 `网易邮箱`  
   1.2. `EMAIL_SUBJECT`为邮件标题, `EMAIL_CONTENT`为邮件正文
 2. 优先用 github 镜像站, 当然, 不排除其挂掉的可能. XD
-3. 每周一早上9点开始爬虫任务. 默认爬取的是`.mobi`, 可在`.env`自行更改`FILETYPE` 为 `pdf | epub | mobi `
+3. 每周六早上8点(可自行更改时间, 目标仓库是每周五晚上更新)开始爬虫任务. 默认爬取的是`.mobi`, 可在`.env`自行更改`FILETYPE` 为 `pdf | epub | mobi `
 
 
 ### Docker
@@ -16,6 +16,7 @@ FILETYPE="mobi"
 REPOSITORY="/hehonghui/the-economist-ebooks/tree/master/01_economist"
 EMAIL_SUBJECT="The Economist"
 EMAIL_CONTENT="The Economist mobi file"
+SCHEDULE={"hour": 8, "minute": 0, "dayOfWeek": 6}
 
 SMTP_CODE="这里填你的SMTP_CODE"
 SENDER="发件人邮箱 (请填写 QQ邮箱 或者 163邮箱)"
@@ -23,7 +24,7 @@ RECEIVER="接收人的邮箱"
 ```  
 
 2. 拉取镜像  
-`docker pull kaier33/craw-the-economist-ebooks:v1.02`
+`docker pull kaier33/craw-the-economist-ebooks:v1.03`
 
 3. 启动  
-`docker run -d --restart=always -e TZ=Asia/Shanghai -v $PWD/.env:/crawl-the-economist/.env kaier33/craw-the-economist-ebooks:v1.02`
+`docker run -d --restart=always -e TZ=Asia/Shanghai -v $PWD/.env:/crawl-the-economist/.env kaier33/craw-the-economist-ebooks:v1.03`
