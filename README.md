@@ -16,7 +16,7 @@ FILETYPE="mobi"
 REPOSITORY="/hehonghui/the-economist-ebooks/tree/master/01_economist"
 EMAIL_SUBJECT="The Economist"
 EMAIL_CONTENT="The Economist mobi file"
-SCHEDULE={"hour": 8, "minute": 0, "dayOfWeek": 6}
+SCHEDULE='{"hour": 8, "minute": 0, "dayOfWeek": 6}'
 
 SMTP_CODE="这里填你的SMTP_CODE"
 SENDER="发件人邮箱 (请填写 QQ邮箱 或者 163邮箱)"
