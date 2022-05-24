@@ -117,7 +117,10 @@ async function crawling() {
     let host = 'github.com'
     host = await findOptimalHost();
     console.log("------------crawling------------");
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      executablePath: '/usr/bin/google-chrome',
+      args: ['--no-sandbox', '--disable-dev-shm-usage']
+    });
     const page = await browser.newPage();
     await page.goto(`https://${host}${CONFIG.REPOSITORY}`);
     await page.waitForSelector('.Details-content--hidden-not-important.js-navigation-container.js-active-navigation-container');
