@@ -38,6 +38,25 @@ function emptyDir(path) {
   })
 }
 
+function sendMailHandle(fileName) {
+  return new Promise(async resolve => {
+    let attempt = 1;
+    let goOn = true;
+    do {
+      try {
+        await sendMail(fileName)
+        goOn = false
+      } catch (_) {
+        attempt++
+        if (attempt > 3) {
+          goOn = false
+        }
+      }
+    } while (goOn);
+    resolve()
+  })
+}
+
 function sendMail(fileName) {
   return new Promise((resolve, reject) => {
     const transporter = nodemailer.createTransport({
@@ -68,24 +87,41 @@ function sendMail(fileName) {
 }
 
 function getFileByUrl(url, fileName) {
-  return new Promise((resolve, reject) => {
-    try {
-      const dirExist = isExist(path.join(__dirname, './download'))
-      if (dirExist) {
-        emptyDir(path.join(__dirname, './download'))
-      } else {
-        fs.mkdirSync(path.join(__dirname, './download'))
+  return new Promise(async resolve => {
+    let result = false
+    let attempt = 1;
+    let goOn = true;
+    do {
+      try {
+        await downloadFile(url, fileName)
+        result = true
+        goOn = false
+      } catch (_) {
+        attempt++
+        if (attempt > 3) {
+          goOn = false
+        }
       }
-      got.stream(url)
-        .pipe(fs.createWriteStream(path.join(__dirname, `./download/${fileName}`)))
-        .on('close', function(err) {
-          if (err) reject(err)
-          console.log(`${new Date().toLocaleString()} 文件下载完毕`)
-          resolve('ok')
-        })
-    } catch (error) {
-      reject(error)
+    } while (goOn);
+    resolve(result)
+  })
+}
+
+function downloadFile(url, fileName) {
+  return new Promise((resolve, reject) => {
+    const dirExist = isExist(path.join(__dirname, './download'))
+    if (dirExist) {
+      emptyDir(path.join(__dirname, './download'))
+    } else {
+      fs.mkdirSync(path.join(__dirname, './download'))
     }
+    got.stream(url)
+      .pipe(fs.createWriteStream(path.join(__dirname, `./download/${fileName}`)))
+      .on('close', function(err) {
+        if (err) reject(err)
+        console.log(`${new Date().toLocaleString()} 文件下载完毕`)
+        resolve('ok')
+      })
   })
 }
 
@@ -117,10 +153,15 @@ async function crawling() {
     let host = 'github.com'
     host = await findOptimalHost();
     console.log("------------crawling------------");
-    const browser = await puppeteer.launch({
-      executablePath: '/usr/bin/google-chrome',
-      args: ['--no-sandbox', '--disable-dev-shm-usage']
-    });
+    let browser = null;
+    if (process.env.NODE_ENV === 'production') {
+      browser = await puppeteer.launch({
+        executablePath: '/usr/bin/google-chrome',
+        args: ['--no-sandbox', '--disable-dev-shm-usage']
+      });
+    } else {
+      browser = await puppeteer.launch();
+    }
     const page = await browser.newPage();
     await page.goto(`https://${host}${CONFIG.REPOSITORY}`);
     await page.waitForSelector('.Details-content--hidden-not-important.js-navigation-container.js-active-navigation-container');
@@ -155,11 +196,13 @@ async function crawling() {
         console.log('page2_data::', page2_data);
         const downloadUrl = page2_data.url.replace('/tree/', '/raw/') + `/${page2_data.fileName}`;
         console.log('download start', downloadUrl)
-        await getFileByUrl(downloadUrl, page2_data.fileName);
-        await page.waitForTimeout(2000);
-        await sendMail(page2_data.fileName);
-        await page.waitForTimeout(2000);
-        emptyDir(path.join(__dirname, './download'));
+        const download_result = await getFileByUrl(downloadUrl, page2_data.fileName).catch(error => console.log('getFileByUrl_err:', error));
+        if (download_result) {
+          await page.waitForTimeout(2000);
+          await sendMailHandle(page2_data.fileName).catch(error => console.log('sendMail_err:', error))
+          await page.waitForTimeout(2000);
+          emptyDir(path.join(__dirname, './download'));
+        }
       }
     }
     await page.close();
