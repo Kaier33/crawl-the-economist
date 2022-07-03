@@ -13,7 +13,7 @@
 
 ```
 FILETYPE="mobi"
-REPOSITORY="/hehonghui/the-economist-ebooks/tree/master/01_economist"
+REPOSITORY="/hehonghui/awesome-english-ebooks/tree/master/01_economist"
 EMAIL_SUBJECT="The Economist"
 EMAIL_CONTENT="The Economist mobi file"
 SCHEDULE='{"hour": 8, "minute": 0, "dayOfWeek": 6}'
