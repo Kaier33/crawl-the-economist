@@ -9,7 +9,7 @@ dotenv.config({path: `${pathsDotenv}.mine`})
 dotenv.config({path: `${pathsDotenv}`});
 
 module.exports = {
-  FILETYPE: process.env.FILETYPE,            // 要下载的文件类型 epub || pdf || mobi (默认)
+  FILETYPE: process.env.FILETYPE,            // 要下载的文件类型 epub || pdf || mobi
   REPOSITORY: process.env.REPOSITORY,        // 仓库地址不包括host
   SMTP_CODE: process.env.SMTP_CODE,          // 记得去邮箱中开启, 和获取SMTP码
   SENDER: process.env.SENDER,                // 邮件发送者
