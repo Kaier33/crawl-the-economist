@@ -17,4 +17,5 @@ module.exports = {
   EMAIL_SUBJECT: process.env.EMAIL_SUBJECT,  // 邮件标题
   EMAIL_CONTENT: process.env.EMAIL_CONTENT,   // 邮件文本内容
   SCHEDULE: process.env.SCHEDULE,             // 每周定时任务执行时间 {hour: 9, minute: 0, dayOfWeek: 1}
+  GITHUB_MIRROR: process.env.GITHUB_MIRROR    // github镜像站
 }

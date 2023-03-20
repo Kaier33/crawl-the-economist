@@ -128,7 +128,8 @@ function downloadFile(url, fileName) {
 async function findOptimalHost() {
   return new Promise(async (resovle) => {
     try {
-      const hosts = ['github.com', 'hub.xn--gzu630h.xn--kpry57d', 'kgithub.com']
+      const mirror = (CONFIG.GITHUB_MIRROR && CONFIG.GITHUB_MIRROR.split(",")) || []
+      const hosts = ['github.com'].concat(mirror)
       const optimalList = []
       for(let host of hosts){
         let res = await ping.promise.probe(host);
