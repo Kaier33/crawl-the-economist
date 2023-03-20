@@ -2,7 +2,7 @@ FROM node:slim AS app
 
 WORKDIR /crawl-the-economist
 
-COPY package*.json /crawl-the-economist
+COPY package*.json /crawl-the-economist/
 
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
@@ -15,6 +15,6 @@ RUN apt-get update && apt-get install curl gnupg -y \
 
 RUN npm install --registry=https://registry.npmmirror.com
 
-COPY . /crawl-the-economist
+COPY . /crawl-the-economist/
 
 CMD ["npm", "start"]
