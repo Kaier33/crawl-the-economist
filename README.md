@@ -4,7 +4,7 @@
   1.1. `SENDER`发件人目前仅支持 `QQ邮箱` 和 `网易邮箱`  
   1.2. `EMAIL_SUBJECT`为邮件标题, `EMAIL_CONTENT`为邮件正文
 2. 请多准备几个 github 镜像站点。 墙外无视 XD
-3. 每周六早上8点(可自行更改时间, 目标仓库是每周五晚上更新)开始爬虫任务. 默认爬取的是`.epub`, 可在`.env`自行更改`FILETYPE` 为 `pdf | epub | mobi `
+3. 每周六早上8点(可自行更改时间, 目标仓库是每周五晚上更新)开始爬虫任务. 默认爬取的是`.epub`, 可在`.env`自行更改`FILETYPE` 为 `pdf | epub `
 
 ### Docker
 
